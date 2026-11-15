@@ -1,0 +1,6 @@
+# Runtime dependencies. For an editable development install, prefer:
+#   python -m pip install -e ".[dev]"
+gymnasium[mujoco]>=1.2,<2
+numpy>=1.26,<3
+torch>=2.2,<3
+

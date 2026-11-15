@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ppo-inverted-pendulum"
+version = "0.1.0"
+description = "A progressive, from-scratch PPO practice project for Gymnasium MuJoCo InvertedPendulum-v5."
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+  "gymnasium[mujoco]>=1.2,<2",
+  "numpy>=1.26,<3",
+  "torch>=2.2,<3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[project.scripts]
+ppo-train = "ppo_pendulum.train:main"
+ppo-evaluate = "ppo_pendulum.evaluate:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+

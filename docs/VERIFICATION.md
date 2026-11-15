@@ -1,5 +1,19 @@
 # 本机验收记录
 
+## JupyterLab 扩展验收（2026-11-15）
+
+- 新增六本渐进式 Notebook，使用项目独立内核逐本从头运行。
+- `python scripts/validate_notebooks.py`：六本全部通过，无 error 输出。
+- 第 06 本完成 256 步短训练、CSV 读取、checkpoint 重载和两回合评估。
+- Clip 正负优势图和短训练曲线已从保存输出提取并检查，标签完整、未裁切。
+- 原有 7 项基础测试通过，`git diff --check` 通过。
+- 保留已执行输出，便于在 GitHub 或 JupyterLab 中直接阅读。
+- HTML 已导出；浏览器预览未能打开，因此未确认整页在浏览器中的显示。图形输出已单独查看。
+
+重新执行：先按照 `notebooks/README.md` 安装并注册项目内核，再运行
+`python scripts/validate_notebooks.py`。练习开关默认关闭，验收覆盖参考实现，
+不表示尚未完成的学生 TODO 已通过。
+
 验收日期：2026-11-15（Asia/Shanghai）
 
 ## 环境

@@ -9,6 +9,23 @@
 
 核心公式见 [docs/PPO_FORMULAS.md](docs/PPO_FORMULAS.md)，练习顺序见 [docs/EXERCISES.md](docs/EXERCISES.md)。
 
+## 在 JupyterLab 中学习与调试
+
+现在可以按顺序打开 [notebooks/](notebooks/README.md) 中的六本 Notebook。
+Notebook 调用现有源码，适合打印张量、检查梯度、观察 GAE 边界和绘制 Clip/训练曲线。
+
+激活项目虚拟环境后，从仓库根目录运行：
+
+```bash
+uv pip install -e ".[dev,notebook]"
+python -m ipykernel install --sys-prefix --name ppo-pendulum --display-name "Python (PPO Pendulum)"
+python -m jupyterlab
+```
+
+选择 **Python (PPO Pendulum)** 内核，从 `01_environment_basics.ipynb` 开始。
+Notebook 默认执行参考实现；完成 `.py` 中的 TODO 后，启用相应 `RUN_EXERCISE` 检查。
+完整环境设置、源码自动重载、调试说明见 [Notebook 使用指南](notebooks/README.md)。
+
 ## 1. 环境与对象
 
 `InvertedPendulum-v5` 的观测是 4 维向量，动作是 1 维连续力，动作范围为 `[-3, 3]`。每个健康时间步奖励为 1；杆角度或状态不健康会 `terminated=True`，到达时间上限会 `truncated=True`。

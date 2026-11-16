@@ -37,9 +37,9 @@ python -m jupyterlab
 | 03_gae_and_bootstrap | 两个 mask、逐步 delta、advantage 与 target |
 | 04_ppo_clipped_loss | 正负 advantage、ratio、clip 曲线与 detach |
 | 05_rollout_debugging | RolloutBatch、旧 log probability、更新前 ratio |
-| 06_end_to_end_training | 256 步短训练、CSV 曲线、checkpoint 评估 |
+| 06_end_to_end_training | 完整训练、CSV 曲线、checkpoint 评估与内嵌 MuJoCo 视频 |
 
-第 06 本默认运行 256 步，只做管线检查，不代表训练收敛。训练结果写到仓库的 `runs/notebook/exercise/`，该目录已被 Git 忽略。重复执行会覆盖同名短训练结果；需要保留时修改 `output_dir`。
+第 06 本的训练步数可以自行调整。训练结果和最多 300 帧的评估视频写到仓库的 `runs/notebook/exercise/`，该目录已被 Git 忽略。重复执行会覆盖同名短训练结果；需要保留时修改 `output_dir` 或视频前缀。
 
 ## 测试与调试
 

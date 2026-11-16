@@ -18,9 +18,17 @@ def evaluate(checkpoint_path: Path, episodes: int, render: bool) -> tuple[float,
         render_mode="human" if render else None,
         max_episode_steps=config["max_episode_steps"],
     )
-    model = GaussianActorCritic(
-        checkpoint["obs_dim"], checkpoint["action_dim"], config["hidden_size"]
-    )
+    implementation = checkpoint.get("implementation", "reference")
+    if implementation == "exercise":
+        from ppo_pendulum.exercises.actor_critic import ExerciseActorCritic
+
+        model = ExerciseActorCritic(
+            checkpoint["obs_dim"], checkpoint["action_dim"], config["hidden_size"]
+        )
+    else:
+        model = GaussianActorCritic(
+            checkpoint["obs_dim"], checkpoint["action_dim"], config["hidden_size"]
+        )
     model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
     returns: list[float] = []

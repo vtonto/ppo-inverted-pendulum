@@ -1,4 +1,4 @@
-"""Stage 4: implement the PPO-Clip actor loss and critic loss."""
+"""Completed PPO-Clip Actor loss and Critic value loss."""
 
 from __future__ import annotations
 
@@ -11,20 +11,16 @@ def ppo_clipped_actor_loss(
     advantages: torch.Tensor,
     clip_coef: float,
 ) -> tuple[torch.Tensor, torch.Tensor]:
-    """Return ``(loss_to_minimize, probability_ratio)``.
-
-    TODO(student):
-    1. ratio = exp(new_log_prob - old_log_prob)
-    2. build unclipped and clipped surrogate objectives
-    3. take the elementwise minimum, then negate its batch mean
-
-    ``old_log_prob`` and ``advantages`` must be fixed rollout data.
-    """
-    raise NotImplementedError("TODO: implement PPO clipped actor loss")
+    """Return ``(loss_to_minimize, probability_ratio)``."""
+    fixed_old_log_prob = old_log_prob.detach()
+    fixed_advantages = advantages.detach()
+    ratio = torch.exp(new_log_prob - fixed_old_log_prob)
+    unclipped = ratio * fixed_advantages
+    clipped = torch.clamp(ratio, 1.0 - clip_coef, 1.0 + clip_coef) * fixed_advantages
+    return -torch.minimum(unclipped, clipped).mean(), ratio
 
 
 def value_loss(predicted_values: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
     """Return ``0.5 * mean((predicted_values - targets) ** 2)``."""
-    # TODO(student): targets should be detached before or inside this function.
-    raise NotImplementedError("TODO: implement critic value loss")
+    return 0.5 * torch.mean((predicted_values - targets.detach()) ** 2)
 

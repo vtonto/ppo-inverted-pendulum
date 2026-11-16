@@ -37,6 +37,8 @@ def seed_everything(seed: int) -> None:
 
 
 class PPOTrainer:
+    implementation = "reference"
+
     def __init__(self, config: PPOConfig) -> None:
         config.validate()
         self.config = config
@@ -205,6 +207,7 @@ class PPOTrainer:
                 "global_step": self.global_step,
                 "obs_dim": int(np.prod(self.env.observation_space.shape)),
                 "action_dim": int(np.prod(self.env.action_space.shape)),
+                "implementation": self.implementation,
             },
             path,
         )
@@ -213,12 +216,14 @@ class PPOTrainer:
         self.env.close()
 
 
-def train(config: PPOConfig) -> Path:
+def train(
+    config: PPOConfig, trainer_class: type[PPOTrainer] = PPOTrainer
+) -> Path:
     config.output_dir.mkdir(parents=True, exist_ok=True)
     (config.output_dir / "config.json").write_text(
         json.dumps(config.as_serializable_dict(), indent=2), encoding="utf-8"
     )
-    trainer = PPOTrainer(config)
+    trainer = trainer_class(config)
     metrics_path = config.output_dir / "metrics.csv"
     start_time = time.perf_counter()
     recent_episode_index = 0

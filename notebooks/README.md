@@ -1,6 +1,6 @@
 # JupyterLab 学习入口
 
-按 01–06 顺序打开 Notebook。每一本可在独立内核中从头运行，默认调用参考实现；练习单元用 `RUN_EXERCISE = True` 显式启用，便于逐步完成 `src/ppo_pendulum/exercises/` 的 TODO。
+按 01–06 顺序打开 Notebook。每一本可在独立内核中从头运行，并直接调用 `src/ppo_pendulum/exercises/` 的完整实现。第 06 本会完整执行环境采样、GAE、PPO 更新、checkpoint 保存与评估。
 
 ## 安装与启动
 
@@ -21,9 +21,9 @@ python -m jupyterlab
 ## 日常学习方式
 
 1. 用 Shift+Enter 逐个执行 Cell，查看中间张量、图形和断言。
-2. 双击左侧 `src/ppo_pendulum/exercises/*.py`，完成对应 TODO 并保存。
+2. 双击左侧 `src/ppo_pendulum/exercises/*.py`，修改或设置断点并保存。
 3. Notebook 已启用 `%autoreload 2`；修改源码后重新运行相关 Cell。修改类结构后，重新创建 Actor、Critic 或 Trainer 实例，必要时 Restart Kernel。
-4. 把练习 Cell 的 `RUN_EXERCISE` 改为 `True`，运行检查；TODO 未完成时会出现预期的 `NotImplementedError`。
+4. 运行每本中的检查 Cell；它们会验证当前内核使用的 exercise 实现。
 5. 每完成一个阶段，使用 **Restart Kernel and Run All Cells**，确认没有依赖乱序执行产生的隐藏变量。
 
 自动重载不会清空已有模型参数或优化器状态。不要在训练过程中修改网络结构后继续沿用旧优化器；重建实例再训练。
@@ -39,7 +39,7 @@ python -m jupyterlab
 | 05_rollout_debugging | RolloutBatch、旧 log probability、更新前 ratio |
 | 06_end_to_end_training | 256 步短训练、CSV 曲线、checkpoint 评估 |
 
-第 06 本默认运行只做管线检查，不代表训练收敛。训练结果写到仓库的 `runs/notebook/`，该目录已被 Git 忽略。重复执行会覆盖该目录中的同名短训练结果；需要保留时修改 `output_dir`。
+第 06 本默认运行 256 步，只做管线检查，不代表训练收敛。训练结果写到仓库的 `runs/notebook/exercise/`，该目录已被 Git 忽略。重复执行会覆盖同名短训练结果；需要保留时修改 `output_dir`。
 
 ## 测试与调试
 
@@ -49,4 +49,4 @@ Notebook 内推荐用 `subprocess.run([sys.executable, '-m', 'pytest', ...])`，
 
 默认不打开 MuJoCo 人机交互窗口，方便 Notebook 稳定执行。需要窗口时，可在终端使用现有 `ppo-evaluate ... --render` 命令。
 
-公式详解见 [PPO_FORMULAS.md](../docs/PPO_FORMULAS.md)，TODO 路线见 [EXERCISES.md](../docs/EXERCISES.md)。
+公式详解见 [PPO_FORMULAS.md](../docs/PPO_FORMULAS.md)，逐阶段代码路线见 [EXERCISES.md](../docs/EXERCISES.md)。

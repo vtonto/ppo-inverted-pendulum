@@ -2,10 +2,10 @@
 
 这是一个面向控制工程师的渐进式练习项目。目标不是调用 Stable-Baselines3，而是亲手完成连续动作 PPO 的关键环节，并用 Gymnasium MuJoCo `InvertedPendulum-v5` 验证完整训练闭环。
 
-项目有两条互不冲突的路径：
+项目提供两条可运行路径：
 
-- `src/ppo_pendulum/exercises/`：核心函数保留 `TODO(student)`，按阶段亲自实现。
-- `src/ppo_pendulum/reference/`：完整参考实现，可先验证环境，也可在卡住时逐函数对照。
+- `src/ppo_pendulum/exercises/`：按学习阶段拆分的完整实现，适合逐函数调试和修改。
+- `src/ppo_pendulum/reference/`：结构更紧凑的对照实现，用于比较结果。
 
 核心公式见 [docs/PPO_FORMULAS.md](docs/PPO_FORMULAS.md)，练习顺序见 [docs/EXERCISES.md](docs/EXERCISES.md)。
 
@@ -23,7 +23,7 @@ python -m jupyterlab
 ```
 
 选择 **Python (PPO Pendulum)** 内核，从 `01_environment_basics.ipynb` 开始。
-Notebook 默认执行参考实现；完成 `.py` 中的 TODO 后，启用相应 `RUN_EXERCISE` 检查。
+Notebook 直接执行 `exercises/` 中的完整实现，第 06 本可以跑完整训练、保存 checkpoint 并评估。
 完整环境设置、源码自动重载、调试说明见 [Notebook 使用指南](notebooks/README.md)。
 
 ## 1. 环境与对象
@@ -83,6 +83,15 @@ runs/smoke/final.pt
 
 ## 4. 运行参考训练
 
+运行按阶段拆分、便于调试的 exercise 完整实现：
+
+```bash
+ppo-train --implementation exercise --total-timesteps 20000
+ppo-evaluate runs/exercise/final.pt --episodes 10
+```
+
+运行结构更紧凑的 reference 实现：
+
 先做小规模观察：
 
 ```bash
@@ -125,13 +134,13 @@ ppo-evaluate runs/reference/final.pt --episodes 3 --render
 6. Update：Mini-batch、多 Epoch、梯度裁剪与诊断指标。
 7. 端到端接线：把练习实现接入 trainer，与参考版结果对比。
 
-阶段 2–4 可用独立检查器：
+拆分函数可用独立检查器：
 
 ```bash
 pytest -q checks/test_exercises.py
 ```
 
-在 TODO 尚未完成时，此命令按设计会失败；普通 `pytest` 只验证参考实现与环境，应该通过。
+普通 `pytest` 验证参考实现与环境；上面的命令验证拆分后的 exercise 实现。
 
 ## 6. 工程目录
 
@@ -151,12 +160,16 @@ ppo-inverted-pendulum/
 │   │   ├── gae.py
 │   │   ├── losses.py
 │   │   ├── rollout.py
-│   │   └── update.py
+│   │   ├── update.py
+│   │   └── trainer.py
 │   └── reference/
 │       ├── model.py
 │       ├── algorithm.py
 │       └── trainer.py
 ├── checks/test_exercises.py
+├── notebooks/
+│   ├── README.md
+│   └── 01_...ipynb → 06_...ipynb
 ├── tests/
 │   ├── test_reference_core.py
 │   └── test_environment_smoke.py

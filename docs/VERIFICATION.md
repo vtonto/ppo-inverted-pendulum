@@ -1,5 +1,15 @@
 # 本机验收记录
 
+## Exercise 完整实现验收（2026-11-16）
+
+- 保留并检查用户已经写入的 Gaussian joint log probability、Critic 输出和 GAE 递推。
+- 补全 PPO clipped loss、Critic value loss、rollout、multi-epoch update 和端到端 Trainer。
+- `ppo-train --implementation exercise` 完成 256 步短训练并生成 checkpoint。
+- `ppo-evaluate` 能识别 exercise checkpoint 并完成无窗口评估。
+- 7 项基础测试和 5 项 exercise 测试通过。
+- 六本 Notebook 全部从头执行通过；第 06 本运行完整 exercise 工程。
+- 两张保存图形已检查，坐标、标签和曲线均可读。
+
 ## JupyterLab 扩展验收（2026-11-15）
 
 - 新增六本渐进式 Notebook，使用项目独立内核逐本从头运行。
@@ -11,8 +21,8 @@
 - HTML 已导出；浏览器预览未能打开，因此未确认整页在浏览器中的显示。图形输出已单独查看。
 
 重新执行：先按照 `notebooks/README.md` 安装并注册项目内核，再运行
-`python scripts/validate_notebooks.py`。练习开关默认关闭，验收覆盖参考实现，
-不表示尚未完成的学生 TODO 已通过。
+`python scripts/validate_notebooks.py`。六本 Notebook 现在直接覆盖完整的 exercise
+实现，包括 rollout、update、checkpoint 保存与评估。
 
 验收日期：2026-11-15（Asia/Shanghai）
 

@@ -1,8 +1,4 @@
-"""Stage 2: implement the factorized Gaussian actor.
-
-Search for ``TODO(student)``. Compare with ``reference/model.py`` only after
-your own implementation passes ``checks/test_exercises.py``.
-"""
+"""Completed factorized Gaussian Actor and Critic implementation."""
 
 from __future__ import annotations
 
@@ -30,9 +26,7 @@ class GaussianActor(nn.Module):
 
     def joint_log_prob(self, dist: Normal, actions: torch.Tensor) -> torch.Tensor:
         """Return one joint log-density per sample, shape ``[batch]``."""
-        # TODO(student): Normal.log_prob returns [batch, action_dim].
-        # Sum only over the action dimension. Do not average across the batch.
-        raise NotImplementedError("TODO: implement joint Gaussian log_prob")
+        return dist.log_prob(actions).sum(dim=-1)
 
     def forward(self, obs: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         dist = self.distribution(obs)
@@ -52,7 +46,44 @@ class Critic(nn.Module):
         )
 
     def forward(self, obs: torch.Tensor) -> torch.Tensor:
-        # TODO(student): remove only the final singleton dimension so that
-        # output is [batch], including when batch_size == 1.
-        raise NotImplementedError("TODO: implement Critic.forward")
+        return self.value_net(obs).squeeze(-1)
+
+
+class ExerciseActorCritic(nn.Module):
+    """Combine the exercise Actor and Critic behind the trainer interface."""
+
+    def __init__(self, obs_dim: int, action_dim: int, hidden_size: int = 64) -> None:
+        super().__init__()
+        self.actor = GaussianActor(obs_dim, action_dim, hidden_size)
+        self.critic = Critic(obs_dim, hidden_size)
+
+    def distribution(self, obs: torch.Tensor) -> Normal:
+        return self.actor.distribution(obs)
+
+    def value(self, obs: torch.Tensor) -> torch.Tensor:
+        return self.critic(obs)
+
+    @torch.no_grad()
+    def act(self, obs: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        dist = self.distribution(obs)
+        raw_action = dist.sample()
+        return raw_action, self.actor.joint_log_prob(dist, raw_action), self.value(obs)
+
+    def evaluate_actions(
+        self, obs: torch.Tensor, actions: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        dist = self.distribution(obs)
+        log_prob = self.actor.joint_log_prob(dist, actions)
+        entropy = dist.entropy().sum(dim=-1)
+        return log_prob, entropy, self.value(obs)
+
+    @torch.no_grad()
+    def deterministic_action(self, obs: torch.Tensor) -> torch.Tensor:
+        return self.actor.mean_net(obs)
+
+    def actor_parameters(self):
+        yield from self.actor.parameters()
+
+    def critic_parameters(self):
+        yield from self.critic.parameters()
 

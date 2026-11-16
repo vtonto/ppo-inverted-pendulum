@@ -1,6 +1,6 @@
 # 分阶段练习与验收
 
-这份路线的原则是：每次只手写一个数学环节，先用小张量验收，再接入环境。不要一开始就盯着训练曲线调参；数学核心没通过单元测试时，长训练只会放大定位难度。
+这份路线的原则是：每次只研究一个数学环节，先用小张量验收，再接入环境。`exercises/` 现在已经包含完整实现，你可以先运行，再逐行修改、设置断点或尝试自己重写。不要一开始就盯着训练曲线调参；数学核心没通过单元测试时，长训练只会放大定位难度。
 
 ## 阶段 0：建立基线
 
@@ -167,7 +167,14 @@ assert values.shape == (T,)
 
 ## 阶段 7：端到端接线
 
-最简单的方法是复制 `reference/trainer.py` 为自己的 `student_trainer.py`，然后逐个将 import 替换为练习实现。这样可以保留参考版作为随时可运行的基线。
+`exercises/trainer.py` 已经把 Actor/Critic、rollout、GAE、loss 和 update 接成完整训练器。命令行运行：
+
+```bash
+ppo-train --implementation exercise --total-timesteps 256 \
+  --rollout-steps 128 --update-epochs 2 --minibatch-size 64
+```
+
+也可以打开 `notebooks/06_end_to_end_training.ipynb`，从 Cell 中完整执行并查看曲线。
 
 先用短配置：
 
